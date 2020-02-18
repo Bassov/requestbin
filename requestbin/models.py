@@ -16,11 +16,14 @@ from requestbin import config
 class Bin(object):
     max_requests = config.MAX_REQUESTS
 
-    def __init__(self, private=False):
+    def __init__(self, private=False, key=None):
         self.created = time.time()
         self.private = private
         self.color = random_color()
-        self.name = tinyid(8)
+        if key is None:
+            self.name = tinyid(8)
+        else:
+            self.name = key
         self.favicon_uri = solid16x16gif_datauri(*self.color)
         self.requests = []
         self.secret_key = os.urandom(24) if self.private else None
@@ -65,6 +68,7 @@ class Request(object):
 
     def __init__(self, input=None):
         if input:
+            self.raw = input.get_data(parse_form_data=True)
             self.id = tinyid(6)
             self.time = time.time()
             self.remote_addr = input.headers.get('X-Forwarded-For', input.remote_addr)
@@ -80,11 +84,10 @@ class Request(object):
             for k in input.form:
                 self.form_data.append([k, input.values[k]])
 
-            self.body = input.data
+            self.body = self.raw
             self.path = input.path
             self.content_type = self.headers.get("Content-Type", "")
 
-            self.raw = input.environ.get('raw')
             self.content_length = len(self.raw)
 
             # for header in self.ignore_headers:

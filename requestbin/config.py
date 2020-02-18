@@ -6,7 +6,7 @@ ROOT_URL = "http://localhost:4000"
 
 PORT_NUMBER = 4000
 
-ENABLE_CORS = False
+ENABLE_CORS = True
 CORS_ORIGINS = "*"
 
 FLASK_SESSION_SECRET_KEY = os.environ.get("SESSION_SECRET_KEY", "N1BKhJLnBqLpexOZdklsfDKFJDKFadsfs9a3r324YB7B73AglRmrHMDQ9RhXz35")
@@ -15,7 +15,7 @@ BIN_TTL = 48*3600
 STORAGE_BACKEND = "requestbin.storage.memory.MemoryStorage"
 MAX_RAW_SIZE = int(os.environ.get('MAX_RAW_SIZE', 1024*10))
 IGNORE_HEADERS = []
-MAX_REQUESTS = 20
+MAX_REQUESTS = 10000
 CLEANUP_INTERVAL = 3600
 
 REDIS_URL = ""
@@ -27,6 +27,8 @@ REDIS_DB = 9
 REDIS_PREFIX = "requestbin"
 
 BUGSNAG_KEY = ""
+
+PREDEFINED_BINS = os.environ.get('PREDEFINED_BINS', 'test').split(',')
 
 if REALM == 'prod':
     DEBUG = False
